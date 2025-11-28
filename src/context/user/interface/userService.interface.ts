@@ -6,6 +6,6 @@ import { User } from "../entity/user.entity";
 export interface IUserService {
   signUp: (signupDTO: SignupDTO) => Promise<ServiceResponse<User>>;
   getAll: () => Promise<ServiceResponse<Pick<User, 'id' | 'uuid' | 'createdAt' | 'email' | 'name'>[]>>;
-  login: (loginDTO: LoginDTO) => Promise<ServiceResponse<User>>;
+  login: (loginDTO: LoginDTO) => Promise<ServiceResponse<{ user: User, jwt: string }>>;
   profile: (userId: number) => Promise<ServiceResponse<User>>; 
 }

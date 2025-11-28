@@ -1,6 +1,6 @@
 export type ServiceResponse<T> = {
   statusCode: number;
-  data?: T;
+  data: T;
   message?: string;
 };
 

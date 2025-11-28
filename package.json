@@ -26,12 +26,17 @@
     "reflect-metadata": "^0.2.2",
     "ts-node-dev": "^2.0.0",
     "typeorm": "^0.3.27",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.0",
     "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": "22.19.0"
   }
 }

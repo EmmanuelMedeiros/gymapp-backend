@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
   username: "postgres",
   password: "admin",
   database: "gymapp",
-  logging: false,
+  logging: true,
   entities: ["src/context/**/entity/*.entity.ts"],
-  migrations: ["src/database/migrations/*.ts"],
+  migrations: [__dirname + "/migrations/*{.ts,.js}"],
 });

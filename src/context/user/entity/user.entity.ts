@@ -2,10 +2,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Table,
   OneToMany,
+  OneToOne,
+  DeleteDateColumn,
+  Relation
 } from "typeorm";
-import { UserExercise } from "../../userExercises/entity/userExercises.entity";
+import { UserNotificationFrequency } from "../../userNotificationFrequency/entity/userNotificationFrequency.entity";
+import { UserExercise } from "../../userExercise/entity/userExercise.entity";
 
 @Entity({
   name: "users",
@@ -35,9 +38,12 @@ export class User {
   @Column()
   updatedAt!: Date;
 
-  @Column()
+  @DeleteDateColumn()
   deletedAt!: Date;
 
-  @OneToMany(() => UserExercise, (exercise) => exercise.user)
-  exercises!: UserExercise[];
+  @OneToOne(() => UserNotificationFrequency, (notification) => notification.user)
+  userNotificationFrequency!: Relation<UserNotificationFrequency>
+
+  @OneToMany(() => UserExercise, (userExercise) => userExercise.user)
+  userExercises!: Relation<UserExercise>[]
 }
