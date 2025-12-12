@@ -10,4 +10,5 @@ export interface IUserExerciseService {
   findUserExerciseByMuscularGroup: (findUserExerciseByMuscularGroupDTO: FindUserExerciseByMuscularGroupDTO) => Promise<ServiceResponse<UserExercise[]>>;
   create: (createUserExerciseDTO: CreateUserExerciseDTO) => Promise<ServiceResponse<UserExercise>>;
   findCurrentUserExerciseDetails: (userExerciseId: number) => Promise<UserExerciseDetail | null>;
+  findExercisesByUserId: (userId: number) => Promise<ServiceResponse<UserExercise[]>>;
 }

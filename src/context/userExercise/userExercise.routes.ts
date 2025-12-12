@@ -10,6 +10,7 @@ import { findUserExerciseByMuscularGroup } from './request/findUserExerciseByMus
 const userExerciseController = createUserExerciseController();
 const router = Router();
 
+router.get('/user-exercise/by/user', authMiddleware(), userExerciseController.findExercisesByUserId);
 router.get('/user-exercise/by/muscular-group/:muscularGroupId', validateRequest(findUserExerciseByMuscularGroup), userExerciseController.findUserExerciseByMuscularGroup);
 router.get('/user-exercise/:id', authMiddleware(), validateRequest(findById), userExerciseController.findById)
 router.post('/user-exercise', authMiddleware(), validateRequest(createRequest), userExerciseController.create);

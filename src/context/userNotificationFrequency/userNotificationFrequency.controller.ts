@@ -20,6 +20,22 @@ export class UserNotificationFrequecyController {
     }
   }
 
+  updateByUserId = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { hour, weekDays } = req.body;
+
+      const { statusCode, ...response } = await this.userNotificationFrequencyService.updateByUserId({
+        userId: req.user.id,
+        hour,
+        weekDays,
+      });
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      console.log(err);
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  }
+
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { hour, weekDays } = req.body;

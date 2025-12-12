@@ -16,9 +16,6 @@ export class MuscularGroup {
   title!: string;
 
   @Column()
-  weekDays?: string;
-
-  @Column()
   createdAt!: Date;
 
   @Column()

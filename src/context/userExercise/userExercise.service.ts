@@ -27,6 +27,25 @@ export class UserExerciseService implements IUserExerciseService {
     this.dataSource = dataSource;
   }
 
+  findExercisesByUserId = async (userId: number): Promise<ServiceResponse<UserExercise[]>> => {
+    const userExercises = await this.userExerciseRepository.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: {
+        muscularGroup: true,
+      },
+    });
+
+    return serviceResponse({
+      data: userExercises,
+      statusCode: 200,
+      message: userExercises.length < 1 ? 'There is not any registered exercise.' : '',
+    });
+  }
+
   findUserExerciseByMuscularGroup = async (findUserExerciseByMuscularGroupDTO: FindUserExerciseByMuscularGroupDTO): Promise<ServiceResponse<UserExercise[]>> => {
     const muscularGroup = await this.muscularGroupService.getById(findUserExerciseByMuscularGroupDTO.muscularGroupId);
 

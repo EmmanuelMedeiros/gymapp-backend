@@ -9,6 +9,12 @@ const userNotificationFrequencyControler =
 
 const router = Router();
 
+router.patch(
+  "/user-notification-frequency",
+  authMiddleware(),
+  userNotificationFrequencyControler.updateByUserId
+)
+
 router.post(
   "/user-notification-frequency",
   authMiddleware(),

@@ -4,7 +4,7 @@ import { UpdateUserNotificationFrequencyDTO } from "../dto/updateUserNotificatio
 import { UserNotificationFrequency } from "../entity/userNotificationFrequency.entity";
 
 export interface IUserNotificationFrequencyService {
-  update: (updateUserNotificationFrequencyDTO: UpdateUserNotificationFrequencyDTO) => Promise<ServiceResponse<UserNotificationFrequency>>;
+  updateByUserId: (updateUserNotificationFrequencyDTO: UpdateUserNotificationFrequencyDTO) => Promise<ServiceResponse<UserNotificationFrequency>>;
   create: (createUserNotificationFrequencyDTO: CreateUserNotificationFrequencyDTO) => Promise<ServiceResponse<UserNotificationFrequency>>;
-  getByUserId: (userId: number) => Promise<ServiceResponse<UserNotificationFrequency>>;
+  getByUserId: (userId: number) => Promise<ServiceResponse<UserNotificationFrequency | null>>;
 }

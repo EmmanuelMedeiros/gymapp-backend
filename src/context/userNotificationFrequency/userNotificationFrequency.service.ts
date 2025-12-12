@@ -21,7 +21,7 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
     this.dataSource = dataSource;
   }
 
-  getByUserId = async (userId: number): Promise<ServiceResponse<UserNotificationFrequency>> => {
+  getByUserId = async (userId: number): Promise<ServiceResponse<UserNotificationFrequency | null>> => {
     const userNotificationFrequency = await this.userNotificationFrequencyRepository.findOne({
       where: {
         user: {
@@ -30,9 +30,10 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
       },
     });
     if (!userNotificationFrequency) {
-      throw HttpResponse.badRequest({
-        message: 'There is no frequency for this user',
-      });
+      return serviceResponse({
+        statusCode: 200,
+        data: null,
+      })
     }
     return serviceResponse({
       statusCode: 200,
@@ -40,13 +41,15 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
     });
   }
 
-  async update(
+  async updateByUserId(
     updateUserNotificationFrequencyDTO: UpdateUserNotificationFrequencyDTO
   ): Promise<ServiceResponse<UserNotificationFrequency>> {
     const userNotificationToUpdate =
       await this.userNotificationFrequencyRepository.findOne({
         where: {
-          id: updateUserNotificationFrequencyDTO.id,
+          user: {
+            id: updateUserNotificationFrequencyDTO.userId,
+          }
         },
       });
 
@@ -56,7 +59,7 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
       });
     }
 
-    const { id, ...updateObj } = updateUserNotificationFrequencyDTO;
+    const { userId, ...updateObj } = updateUserNotificationFrequencyDTO;
     await this.userNotificationFrequencyRepository.update(
       userNotificationToUpdate,
       {
@@ -66,7 +69,12 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
 
     return serviceResponse({
       statusCode: 200,
-      data: userNotificationToUpdate,
+      data: { 
+        id: userNotificationToUpdate.id,
+        hour: updateObj.hour || userNotificationToUpdate.hour,
+        user: userNotificationToUpdate.user,
+        weekDays: updateObj.weekDays || userNotificationToUpdate.weekDays
+       },
     });
   }
 

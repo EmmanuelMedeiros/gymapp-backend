@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/84fffe6c-9dd8-462b-90a1-6eb962060f26/console.sql" value="84fffe6c-9dd8-462b-90a1-6eb962060f26" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/84fffe6c-9dd8-462b-90a1-6eb962060f26/gymapp.sql" value="84fffe6c-9dd8-462b-90a1-6eb962060f26" />
   </component>
 </project>

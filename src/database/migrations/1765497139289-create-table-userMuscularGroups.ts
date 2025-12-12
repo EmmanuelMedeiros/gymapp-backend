@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
-export class CreateTableUserExercises1764213374811 implements MigrationInterface {
+export class CreateTableUserMuscularGroups1765497139289 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'userExercises',
+        name: 'userMuscularGroups',
         columns: [
           {
             name: 'id',
@@ -19,29 +19,13 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
             isNullable: false,
           },
           {
-            name: 'title',
-            type: 'varchar',
-            isNullable: false,
-            isUnique: true,
-          },
-          {
             name: 'muscularGroupId',
             type: 'int',
             isNullable: false,
           },
           {
-            name: 'createdAt',
-            type: 'timestamp',
-            default: 'NOW()',
-          },
-          {
-            name: 'updatedAt',
-            type: 'timestamp',
-            default: 'NOW()',
-          },
-          {
-            name: 'deletedAt',
-            type: 'timestamp',
+            name: 'weekDays',
+            type: 'varchar',
             isNullable: true,
           },
         ],
@@ -49,7 +33,7 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
     );
 
     await queryRunner.createForeignKey(
-      'userExercises',
+      'userMuscularGroups',
       new TableForeignKey({
         columnNames: ['userId'],
         referencedTableName: 'users',
@@ -59,7 +43,7 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
     );
 
     await queryRunner.createForeignKey(
-      'userExercises',
+      'userMuscularGroups',
       new TableForeignKey({
         columnNames: ['muscularGroupId'],
         referencedTableName: 'muscularGroups',
@@ -69,7 +53,5 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('userExercises', true);
-  }
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }
