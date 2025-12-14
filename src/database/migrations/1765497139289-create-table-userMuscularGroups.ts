@@ -29,6 +29,12 @@ export class CreateTableUserMuscularGroups1765497139289 implements MigrationInte
             isNullable: true,
           },
         ],
+        uniques: [
+          {
+            name: 'UQ_user_muscular_group',
+            columnNames: ['userId', 'muscularGroupId'],
+          },
+        ],
       }),
     );
 

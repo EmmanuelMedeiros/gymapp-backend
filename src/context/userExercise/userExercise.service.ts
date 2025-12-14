@@ -1,4 +1,4 @@
-import { DataSource, Not, Raw, Relation, Repository } from "typeorm";
+import { DataSource, ILike, Not, Raw, Relation, Repository } from "typeorm";
 import { serviceResponse, ServiceResponse } from "../../utils/serviceResponse";
 import { IMuscularGroupService } from "../muscularGroup/interface/muscularGroupService.interface";
 import { CreateUserExerciseDTO } from "./dto/createUserExercise.dto";
@@ -74,7 +74,7 @@ export class UserExerciseService implements IUserExerciseService {
   findUserExerciseByTitle = async (userExerciseName: string): Promise<UserExercise | null> => {
     const userExerciseRepositoryResponse = await this.userExerciseRepository.findOne({
       where: {
-        title: userExerciseName,
+        title: ILike(`%${userExerciseName}%`),
       },
     });
     return userExerciseRepositoryResponse;

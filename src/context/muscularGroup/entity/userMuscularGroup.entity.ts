@@ -8,11 +8,12 @@ import {
   Relation,
 } from 'typeorm';
 import { User } from '../../user/entity/user.entity';
+import { MuscularGroup } from './muscularGroup.entity';
 
 @Entity({
   name: 'userMuscularGroups',
 })
-export class MuscularGroup {
+export class UserMuscularGroup {
   @PrimaryGeneratedColumn()
   id!: number;
 
