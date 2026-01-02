@@ -6,9 +6,10 @@ import { UserExerciseDetail } from "../entity/userExerciseDetail.entity";
 
 export interface IUserExerciseService {
   findById: (id: number) => Promise<ServiceResponse<UserExercise>>;
-  findUserExerciseByTitle: (userExerciseName: string) => Promise<UserExercise | null>;
+  findUserExerciseByTitle: (userExerciseName: string, muscularGroupId: number) => Promise<UserExercise | null>;
   findUserExerciseByMuscularGroup: (findUserExerciseByMuscularGroupDTO: FindUserExerciseByMuscularGroupDTO) => Promise<ServiceResponse<UserExercise[]>>;
-  create: (createUserExerciseDTO: CreateUserExerciseDTO) => Promise<ServiceResponse<UserExercise>>;
   findCurrentUserExerciseDetails: (userExerciseId: number) => Promise<UserExerciseDetail | null>;
   findExercisesByUserId: (userId: number) => Promise<ServiceResponse<UserExercise[]>>;
+  deleteById: (id: number) => Promise<ServiceResponse<null>>;
+  create: (createUserExerciseDTO: CreateUserExerciseDTO) => Promise<ServiceResponse<UserExercise>>;
 }

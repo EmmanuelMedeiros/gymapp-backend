@@ -6,9 +6,13 @@ import { Encrypt } from "../../commons/encrypt/encrypt";
 import { JWTService } from "../../commons/jwt/jwt";
 
 export function createUserController() {
+  const userService = createUserService();
+  return new UserController(userService);
+}
+
+export function createUserService() {
   const jwtService = new JWTService();
   const encrypt = new Encrypt();
   const userRepository = AppDataSource.getRepository(User);
-  const userService = new UserService(userRepository, encrypt, jwtService);
-  return new UserController(userService);
+  return new UserService(userRepository, encrypt, jwtService);
 }

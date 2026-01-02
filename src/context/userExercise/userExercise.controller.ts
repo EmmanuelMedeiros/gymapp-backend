@@ -15,10 +15,54 @@ export class UserExericeController {
     this.userExerciseDetailService = userExerciseDetailService;
   }
 
+  userWeightByPeriod = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const userId = req.user.id;
+      const { datePeriod, exerciseId } = req.body;
+      const { statusCode, ...response } =
+        await this.userExerciseDetailService.userWeightByPeriod({
+          datePeriod,
+          exerciseId,
+          userId,
+        });
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  };
+
+  minAndMaxWeightByUser = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const userId = req.user.id;
+      const { datePeriod, exerciseId } = req.body;
+      const { statusCode, ...response } =
+        await this.userExerciseDetailService.minAndMaxWeightByUser({
+          datePeriod,
+          exerciseId,
+          userId,
+        });
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  };
+
+  deleteById = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const id = req.params.id;
+      const { statusCode, ...response } = await this.userExerciseService.deleteById(Number(id));
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  };
+
   findExercisesByUserId = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userId = req.user.id;
-      const { statusCode, ...response } = await this.userExerciseService.findExercisesByUserId(userId); 
+      const { statusCode, ...response } = await this.userExerciseService.findExercisesByUserId(
+        userId,
+      );
       return res.status(statusCode).send(response);
     } catch (err: any) {
       return res.status(err.statusCode || 500).send({ error: err.message });
@@ -50,7 +94,7 @@ export class UserExericeController {
 
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { muscularGroupId, title, weekDays, weight } = req.body;
+      const { muscularGroupId, title, weight } = req.body;
       const user = req.user;
       const { statusCode, ...response } = await this.userExerciseService.create({
         muscularGroupId,

@@ -27,6 +27,25 @@ export class UserExerciseService implements IUserExerciseService {
     this.dataSource = dataSource;
   }
 
+  deleteById = async (id: number): Promise<ServiceResponse<null>> => {
+    const deleteQuery = await this.userExerciseRepository.softDelete(
+      {
+        id,
+      }
+    );
+
+    if (deleteQuery.affected && deleteQuery.affected > 0) {
+      return serviceResponse({
+        statusCode: 200,
+        data: null,
+        message: 'Exercise deleted successfully',
+      });
+    }
+    throw HttpResponse.badRequest({
+      message: 'There is no exercise with given ID',
+    });
+  }
+
   findExercisesByUserId = async (userId: number): Promise<ServiceResponse<UserExercise[]>> => {
     const userExercises = await this.userExerciseRepository.find({
       where: {
@@ -71,10 +90,13 @@ export class UserExerciseService implements IUserExerciseService {
     })
   };
 
-  findUserExerciseByTitle = async (userExerciseName: string): Promise<UserExercise | null> => {
+  findUserExerciseByTitle = async (userExerciseName: string, muscularGroupId: number): Promise<UserExercise | null> => {
     const userExerciseRepositoryResponse = await this.userExerciseRepository.findOne({
       where: {
         title: ILike(`%${userExerciseName}%`),
+        muscularGroup: {
+          id: muscularGroupId,
+        }
       },
     });
     return userExerciseRepositoryResponse;
@@ -103,7 +125,7 @@ export class UserExerciseService implements IUserExerciseService {
   create = async (createUserExerciseDTO: CreateUserExerciseDTO): Promise<ServiceResponse<UserExercise>> => {
     const { data: muscularGroup } = await this.muscularGroupService.getById(createUserExerciseDTO.muscularGroupId);
 
-    const userExerciseWithSameTitle = await this.findUserExerciseByTitle(createUserExerciseDTO.title); 
+    const userExerciseWithSameTitle = await this.findUserExerciseByTitle(createUserExerciseDTO.title, createUserExerciseDTO.muscularGroupId); 
     if (userExerciseWithSameTitle) {
       throw HttpResponse.badRequest({
         message: `There is already an user exercise called '${createUserExerciseDTO.title}'`,

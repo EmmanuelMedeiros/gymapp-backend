@@ -46,4 +46,7 @@ export class User {
 
   @OneToMany(() => UserExercise, (userExercise) => userExercise.user)
   userExercises!: Relation<UserExercise>[]
+
+  @Column()
+  deviceToken!: string;
 }

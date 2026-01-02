@@ -9,6 +9,12 @@ const userController = createUserController();
 
 const router = Router();
 
+router.get(
+  "/user/profile",
+  authMiddleware(),
+  userController.profile,
+)
+
 router.post(
   "/user/signup",
   validateRequest(signupRequest),
@@ -22,9 +28,5 @@ router.post(
 );
 
 router.get("/user", userController.getAll);
-
-router.get("/user/profile", authMiddleware(), (req, res) => {
-  return res.status(200).json({ message: req.user });
-});
 
 export default router;

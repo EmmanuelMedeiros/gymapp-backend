@@ -22,7 +22,6 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
             name: 'title',
             type: 'varchar',
             isNullable: false,
-            isUnique: true,
           },
           {
             name: 'muscularGroupId',
@@ -47,6 +46,12 @@ export class CreateTableUserExercises1764213374811 implements MigrationInterface
         ],
       }),
     );
+
+    await queryRunner.query(`
+      CREATE UNIQUE INDEX "IDX_userExercises_title_muscularGroup_not_deleted"
+      ON "userExercises" ("title", "muscularGroupId")
+      WHERE "deletedAt" IS NULL
+    `);
 
     await queryRunner.createForeignKey(
       'userExercises',

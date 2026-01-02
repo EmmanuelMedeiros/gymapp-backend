@@ -1,28 +1,90 @@
-import { DataSource, Relation, Repository } from "typeorm";
+import { Between, DataSource, Relation, Repository } from "typeorm";
 import { UserExerciseDetail } from "./entity/userExerciseDetail.entity";
-import { IUserExerciseDetailService } from "./interface/userExerciseDetailService.interface";
+import { IUserExerciseDetailService, MinAndMaxWeights } from "./interface/userExerciseDetailService.interface";
 import { serviceResponse, ServiceResponse } from "../../utils/serviceResponse";
 import { CreateUserExerciseDetailDTO } from "./dto/createUserExerciseDetail.dto";
 import { IUserExerciseService } from "./interface/userExercisesService.interface";
 import { UserExercise } from "./entity/userExercise.entity";
 import { UpdateWeightDTO } from "./dto/updateWeight.dto";
 import { HttpResponse } from "../../utils/httpResponses";
+import { DashboardData } from "../../commons/types/dashboardData.type";
+import { WeightInPeriodDTO } from "./dto/weightInPeriod.dto";
+import dayjs from "dayjs";
 
 export class UserExerciseDetailsService implements IUserExerciseDetailService {
   userExerciseDetailRepository: Repository<UserExerciseDetail>;
 
   userExerciseService: IUserExerciseService;
-
+  
   dataSource: DataSource;
   
+  userExerciseRepository: Repository<UserExercise>;
   constructor(
-    userExerciseDetail: Repository<UserExerciseDetail>,
+    userExerciseDetailRepository: Repository<UserExerciseDetail>,
     userExerciseService: IUserExerciseService,
+    userExerciseRepository: Repository<UserExercise>,
     dataSource: DataSource,
   ) {
-    this.userExerciseDetailRepository = userExerciseDetail;
+    this.userExerciseDetailRepository = userExerciseDetailRepository;
     this.userExerciseService = userExerciseService;
     this.dataSource = dataSource;
+    this.userExerciseRepository = userExerciseRepository
+  }
+
+  userWeightByPeriod = async(weightInPeriodDTO: WeightInPeriodDTO): Promise<ServiceResponse<DashboardData[]>> => {
+    const dateByPeriod = await this.userExerciseRepository.query(
+      `
+        select DATE(ued."createdAt") as date, ued.weight as weight
+        from "userExercises" ue
+        inner join "userExercisesDetails" ued on ued."userExercisesId" = ue.id 
+          and Date(ued."createdAt") between $1 and $2
+        inner join users u on u.id = ue."userId" and u.id = $3
+        where ue.id = $4
+        order by ued."createdAt" ASC
+      `,
+      [
+        weightInPeriodDTO.datePeriod.initial,
+        weightInPeriodDTO.datePeriod.final,
+        weightInPeriodDTO.userId,
+        weightInPeriodDTO.exerciseId,
+      ]
+    );
+
+    const formatedData = dateByPeriod.map(
+      (element: { date: Date, weight: number }) => ({
+        value: element.weight,
+        label: dayjs(element.date).format('YYYY-MM-DD'),
+      })
+    )
+
+    return serviceResponse({
+      statusCode: 200,
+      data: formatedData,
+    });
+  }
+
+  minAndMaxWeightByUser = async(weightInPeriodDTO: WeightInPeriodDTO): Promise<ServiceResponse<MinAndMaxWeights>> => {
+    const [minAndMaxWeights] = await this.userExerciseRepository.query(
+      `
+        select min(ued.weight) as min, max(ued.weight) as max
+        from "userExercises" ue
+        inner join "userExercisesDetails" ued on ued."userExercisesId" = ue.id 
+          and Date(ued."createdAt") between $1 and $2
+        inner join users u on u.id = ue."userId" and u.id = $3
+        where ue.id = $4
+      `,
+      [
+        weightInPeriodDTO.datePeriod.initial,
+        weightInPeriodDTO.datePeriod.final,
+        weightInPeriodDTO.userId,
+        weightInPeriodDTO.exerciseId,
+      ]
+    );
+
+    return serviceResponse({
+      statusCode: 200,
+      data: minAndMaxWeights
+    })
   }
 
   updateWeight = async (updateWeightDTO: UpdateWeightDTO): Promise<ServiceResponse<UserExerciseDetail>> => {

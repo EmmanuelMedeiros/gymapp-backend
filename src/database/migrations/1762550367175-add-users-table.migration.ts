@@ -34,6 +34,11 @@ export class AddUsersTable1762550367175 implements MigrationInterface {
             type: "varchar",
           },
           {
+            name: "deviceToken",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: "CURRENT_TIMESTAMP",

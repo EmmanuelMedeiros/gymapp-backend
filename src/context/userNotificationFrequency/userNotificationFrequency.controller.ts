@@ -10,6 +10,17 @@ export class UserNotificationFrequecyController {
     this.userNotificationFrequencyService = userNotificationFrequencyService;
   }
 
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const notificationFrequencyId = req.params.id;
+      const { statusCode, ...response } = await this.userNotificationFrequencyService.delete(Number(notificationFrequencyId));
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      console.log(err);
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  }
+
   getByUserId = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { statusCode, ...response } = await this.userNotificationFrequencyService.getByUserId(req.user.id);

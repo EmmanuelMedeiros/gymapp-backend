@@ -11,6 +11,6 @@ export function createUserExerciseController() {
   const userExerciseDetailRepository = AppDataSource.getRepository(UserExerciseDetail);
   const muscularGroupService = createMuscularGroupService();
   const userExerciseService = new UserExerciseService(muscularGroupService, userExerciseRepository, AppDataSource);
-  const userExerciseDetailService = new UserExerciseDetailsService(userExerciseDetailRepository, userExerciseService, AppDataSource);
+  const userExerciseDetailService = new UserExerciseDetailsService(userExerciseDetailRepository, userExerciseService, userExerciseRepository, AppDataSource);
   return new UserExericeController(userExerciseService, userExerciseDetailService);
 }

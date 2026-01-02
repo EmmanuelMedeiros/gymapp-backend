@@ -6,6 +6,10 @@ import { UpdateUserNotificationFrequencyDTO } from "./dto/updateUserNotification
 import { HttpResponse } from "../../utils/httpResponses";
 import { IUserNotificationFrequencyService } from "./interface/userNotificationFrequencyService.interface";
 import { User } from "../user/entity/user.entity";
+import { SystemJobs } from "../../jobs";
+import { Queue } from "../../jobs/enum/queue.enum";
+import { JobName } from "../../jobs/enum/jobName.enum";
+import dayjs from "dayjs";
 
 export class UserNotificationFrequencyService implements IUserNotificationFrequencyService {
   userNotificationFrequencyRepository: Repository<UserNotificationFrequency>;
@@ -19,6 +23,22 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
     this.userNotificationFrequencyRepository =
       userNotificationFrequencyRepository;
     this.dataSource = dataSource;
+  }
+
+  delete = async (id: number): Promise<ServiceResponse<null>> => {
+    const notificationFrequency = await this.userNotificationFrequencyRepository.delete({
+      id,
+    });
+    if (!notificationFrequency.affected) {
+      throw HttpResponse.badRequest({
+        message: 'No frequency was found!',
+      });
+    }
+    return serviceResponse({
+      data: null,
+      statusCode: 200,
+      message: 'Frequency deleted!',
+    });
   }
 
   getByUserId = async (userId: number): Promise<ServiceResponse<UserNotificationFrequency | null>> => {
@@ -110,6 +130,20 @@ export class UserNotificationFrequencyService implements IUserNotificationFreque
         UserNotificationFrequency,
         frequencyToCreate
       );
+
+      SystemJobs.registerJob(Queue.NotificationQueue, 
+        {
+          data: { title: 'Hora do Treino', description: 'Tá na hora de ir treinar!', deviceToken: 132456 },
+          name: JobName.UserNotification,
+          attributes: {
+            jobId: createdFrequency.id.toString(),
+            removeOnComplete: false,
+            repeat: {
+              pattern: `${frequencyToCreate.hour.split(':')[1]} ${frequencyToCreate.hour.split(':')[0]} * * ${frequencyToCreate.weekDays}`
+            }
+          }
+        }
+      )
 
       await queryRunner.commitTransaction();
       return serviceResponse({

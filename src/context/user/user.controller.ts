@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { IUserService } from "./interface/userService.interface";
+import { Request, Response } from 'express';
+import { IUserService } from './interface/userService.interface';
 
 export class UserController {
   private userService: IUserService;
@@ -7,6 +7,16 @@ export class UserController {
   constructor(userService: IUserService) {
     this.userService = userService;
   }
+
+  profile = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const userId = req.user.id;
+      const { statusCode, ...response } = await this.userService.profile(userId);
+      return res.status(statusCode).send(response);
+    } catch (err: any) {
+      return res.status(err.statusCode || 500).send({ error: err.message });
+    }
+  };
 
   login = async (req: Request, res: Response): Promise<Response> => {
     try {

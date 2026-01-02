@@ -27,7 +27,6 @@ export class JWTService implements IJwtService {
   };
 
   verify = (token: string): JwtPayload => {
-    console.log(token);
     if (typeof jwtSecret !== "string") {
       throw new Error("JWT Secret not found");
     }
