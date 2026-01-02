@@ -3,7 +3,7 @@ import { IFirebaseService } from '../commons/firebase/interface/firebaseService.
 import IORedis from 'ioredis';
 import { Queue as QueueName } from './enum/queue.enum';
 import { runNotificationWorker } from './worker';
-require('dotnev').config();
+require('dotenv').config();
 
 const connection = new IORedis({ 
   host: process.env.REDIS_HOST,

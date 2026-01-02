@@ -8,7 +8,7 @@ import { createSystemJobsEntity } from './jobs/job.factory';
 const app = express();
 const jobs = createSystemJobsEntity();
 
-jobs.initalize();
+//jobs.initalize();
 AppDataSource.initialize();
 
 app.use(express.json());
