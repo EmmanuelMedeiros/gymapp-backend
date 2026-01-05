@@ -3,9 +3,9 @@ JWT_EXPIRATION_TIME='21600'
 
 // REDIS \\
 
-REDIS_HOST='redis-17077.c265.us-east-1-2.ec2.cloud.redislabs.com'
-REDIS_PORT='17077'
-REDIS_PASSWORD=''HFOMwDcbzqpVD4C4mLZiVdxZQDvX6JWu''
+REDIS_HOST=redis_host
+REDIS_PORT='9999'
+REDIS_PASSWORD='redis_pwd'
 REDIS_DB='0'
 
 // DATABASE \\
